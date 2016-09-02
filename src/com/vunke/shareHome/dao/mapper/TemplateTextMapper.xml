@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vunke.shareHome.dao.TemplateTextMapper" >
+  <resultMap id="BaseResultMap" type="com.vunke.shareHome.model.TemplateText" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CONTENT_MSG" property="contentMsg" jdbcType="VARCHAR" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="DESPRIPTION" property="despription" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="ACTION_TYPE" property="actionType" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="OTHER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CONTENT_MSG, TITLE, DESPRIPTION, STATUS, ACTION_TYPE, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TEMPLATE_TEXT
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <!--发送未接来电提醒模版信息-->
+  <select id="findTemplate" resultMap="BaseResultMap" parameterType="Map">
+    SELECT * FROM TEMPLATE_TEXT WHERE TITLE =#{title,jdbcType=VARCHAR} AND ACTION_TYPE = #{actionType,jdbcType=VARCHAR} AND STATUS = '1'
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TEMPLATE_TEXT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.vunke.shareHome.model.TemplateText" >
+    insert into TEMPLATE_TEXT (ID, CONTENT_MSG, TITLE, 
+      DESPRIPTION, STATUS, ACTION_TYPE, 
+      CREATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{contentMsg,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{despription,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{actionType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=OTHER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vunke.shareHome.model.TemplateText" >
+    insert into TEMPLATE_TEXT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="contentMsg != null" >
+        CONTENT_MSG,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="despription != null" >
+        DESPRIPTION,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="actionType != null" >
+        ACTION_TYPE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="contentMsg != null" >
+        #{contentMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="despription != null" >
+        #{despription,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="actionType != null" >
+        #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vunke.shareHome.model.TemplateText" >
+    update TEMPLATE_TEXT
+    <set >
+      <if test="contentMsg != null" >
+        CONTENT_MSG = #{contentMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="despription != null" >
+        DESPRIPTION = #{despription,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="actionType != null" >
+        ACTION_TYPE = #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=OTHER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vunke.shareHome.model.TemplateText" >
+    update TEMPLATE_TEXT
+    set CONTENT_MSG = #{contentMsg,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR},
+      DESPRIPTION = #{despription,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      ACTION_TYPE = #{actionType,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=OTHER}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

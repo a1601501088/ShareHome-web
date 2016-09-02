@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vunke.shareHome.dao.SysServiceMsgMapper">
+    <resultMap id="BaseResultMap" type="com.vunke.shareHome.model.SysServiceMsg">
+        <result column="MSG_ID" property="msgId" jdbcType="VARCHAR"/>
+        <result column="MSG_PHONE" property="msgPhone" jdbcType="VARCHAR"/>
+        <result column="MSG_CONTENT" property="msgContent" jdbcType="VARCHAR"/>
+        <result column="MSG_STUTAS" property="msgStutas" jdbcType="VARCHAR"/>
+        <result column="MSG_TIME" property="msgTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.vunke.shareHome.model.SysServiceMsg">
+    insert into SYS_SERVICE_MSG (MSG_ID, MSG_PHONE, MSG_CONTENT, 
+      MSG_STUTAS, MSG_TIME)
+    values (#{msgId,jdbcType=VARCHAR}, #{msgPhone,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR}, 
+      #{msgStutas,jdbcType=VARCHAR}, #{msgTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.vunke.shareHome.model.SysServiceMsg">
+        insert into SYS_SERVICE_MSG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                MSG_ID,
+            </if>
+            <if test="msgPhone != null">
+                MSG_PHONE,
+            </if>
+            <if test="msgContent != null">
+                MSG_CONTENT,
+            </if>
+            <if test="msgStutas != null">
+                MSG_STUTAS,
+            </if>
+            <if test="msgTime != null">
+                MSG_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                #{msgId,jdbcType=VARCHAR},
+            </if>
+            <if test="msgPhone != null">
+                #{msgPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="msgContent != null">
+                #{msgContent,jdbcType=VARCHAR},
+            </if>
+            <if test="msgStutas != null">
+                #{msgStutas,jdbcType=VARCHAR},
+            </if>
+            <if test="msgTime != null">
+                #{msgTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryServiceMsg" resultType="com.vunke.shareHome.model.SysServiceMsg">
+      SELECT * FROM SYS_SERVICE_MSG WHERE  MSG_STUTAS = '1'
+  </select>
+</mapper>

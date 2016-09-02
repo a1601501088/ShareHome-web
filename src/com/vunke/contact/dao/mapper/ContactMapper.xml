@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vunke.contact.dao.ContactMapper">
+
+    <insert id="insert" parameterType="com.vunke.contact.model.Contact">
+        insert into CONTACT (USER_ID, HOME_PHONE, COMPANY_PHONE,
+        USER_NAME, EMAIL, GROUP_ID,
+        FIRST_NAME, LAST_NAME, FACE,CONTACT_NAME
+        )
+        values (#{userId,jdbcType=VARCHAR}, #{homePhone,jdbcType=VARCHAR}, #{companyPhone,jdbcType=VARCHAR},
+        #{userName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR},
+        #{firstName,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR}, #{face,jdbcType=VARCHAR},
+        #{contactName,jdbcType=VARCHAR}
+        )
+        <!--   <selectKey resultType="java.lang.String" keyProperty="userId" order="BEFORE">
+               SELECT seq_contact_id.nextval FROM dual
+           </selectKey>-->
+    </insert>
+
+    <update id="update" parameterType="com.vunke.contact.model.Contact">
+        update CONTACT
+        <set>
+            <if test="firstName != null and firstName != ''">
+                FIRST_NAME = #{firstName,jdbcType=VARCHAR},
+            </if>
+            <if test="homePhone != null and homePhone != ''">
+                HOME_PHONE = #{homePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="companyPhone != null and companyPhone != ''">
+                COMPANY_PHONE = #{companyPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null and email != ''">
+                EMAIL = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="groupId != null and groupId != ''">
+                GROUP_ID = #{groupId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastName != null and lastName != ''">
+                LAST_NAME = #{lastName,jdbcType=VARCHAR},
+            </if>
+            <if test="face != null and face != ''">
+                FACE = #{face,jdbcType=VARCHAR},
+            </if>
+            <if test="contactName != null and contactName != ''">
+                CONTACT_NAME = #{contactName,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where USER_ID = #{userId,jdbcType=VARCHAR} AND USER_NAME = #{userName,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByIdAndName" resultType="com.vunke.contact.model.Contact" parameterType="Map">
+
+select * from CONTACT where USER_ID = #{userId,jdbcType=VARCHAR}  AND USER_NAME = #{userName,jdbcType=VARCHAR}
+  </select>
+
+
+    <select id="getContactAll" resultType="com.vunke.contact.model.Contact" parameterType="java.lang.String">
+        SELECT * FROM CONTACT WHERE user_name = #{userName,jdbcType=VARCHAR} ORDER by
+        USER_ID DESC
+    </select>
+
+    <!--新版本获取所有的联系人-->
+    <select id="getContactNewAll" resultType="com.vunke.contact.model.Contact" parameterType="java.lang.String">
+
+       select * from ( SELECT USER_ID,
+        COMPANY_PHONE,
+        USER_NAME, EMAIL, GROUP_ID,
+        FIRST_NAME, LAST_NAME, FACE,CONTACT_NAME,
+        CASE length(HOME_PHONE) WHEN 12 THEN substr(HOME_PHONE,2) ELSE HOME_PHONE END  as HOME_PHONE
+        FROM CONTACT WHERE USER_NAME LIKE #{userName,jdbcType=VARCHAR} ORDER BY USER_ID desc) WHERE CONTACT_NAME != '我的手机'
+        and CONTACT_NAME != '手机看家'
+    </select>
+
+    <select id="findContact" resultType="com.vunke.contact.model.Contact" parameterType="Map">
+      SELECT * FROM CONTACT WHERE USER_NAME LIKE #{userName} AND HOME_PHONE LIKE #{contactPhone}
+    </select>
+
+    <!--分页查询-->
+    <select id="selectPageList" parameterType="Map" resultType="com.vunke.contact.model.Contact">
+        SELECT b.* from
+        (SELECT a.*,rownum rn from
+        (SELECT * FROM CONTACT  WHERE
+
+            USER_NAME = #{userName}
+
+        order by user_id DESC ) a
+
+        where rownum &lt; = #{endRow})b
+        where b.rn &gt; = #{startRow}
+    </select>
+
+
+    <!-- 分页查询总条数 -->
+    <select id="selectTotalRows" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from CONTACT
+        <where>
+            <if test="USER_NAME != null and USER_NAME !='' ">USER_NAME = #{userName}</if>
+        </where>
+    </select>
+
+    <select id="selectMaxUserId" resultType="int">
+        SELECT MAX(USER_ID)  from CONTACT
+    </select>
+
+
+    <delete id="deleteByIdAndUserName" parameterType="Map">
+        <!--  delete from CONTACT where USER_ID in (1,3,4) and USER_NAME = '818390878104' ; -->
+        DELETE from CONTACT where USER_ID in
+        <foreach item="item" index="index" collection="userIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND USER_NAME = #{userName,jdbcType=VARCHAR}
+    </delete>
+    <delete id="removeByContactIdAndUserName" parameterType="Map">
+        <!--  delete from CONTACT where USER_ID in (1,3,4) and USER_NAME = '%18390878104%' ; -->
+        DELETE from CONTACT where USER_ID in
+        <foreach item="item" index="index" collection="userIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND USER_NAME LIKE #{userName,jdbcType=VARCHAR}
+    </delete>
+
+
+</mapper>

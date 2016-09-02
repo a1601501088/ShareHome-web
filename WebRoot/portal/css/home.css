@@ -1,0 +1,49 @@
+﻿@charset "utf-8";
+/* CSS Document */
+body{ margin:0;}
+.clear_box{ clear:both;}
+.yeyou{ width:950px; margin-left:auto; margin-right:auto;}
+.yt_left{ float:left; margin-left:86px;margin-top:30px}
+.yt_right{ float:right ;margin-right:80px;}
+.yt_right p{ font-family:'微软雅黑'; font-size:18px; line-height:30px;}
+hr{ width:900px; margin:0 auto; margin-bottom:20px;}
+/*页头*/
+.jieshao{ width:770px; margin:0 auto; margin-bottom:10px;}
+.jieshao b{ font-family:'微软雅黑'; font-size:28px;}
+.jieshao .sp_1{ font-family:'微软雅黑'; font-size:20px;line-height:44px; }
+.jieshao .sp_2{ font-family:'华文细黑'; font-size:20px;line-height:32px;color:#6d6d6d;}
+/*介绍*/
+.banner{ width:950px; margin:0 auto; margin-bottom:10px; position:relative}
+.xiangshi_box{ width:519px; margin:0 auto; overflow:hidden}
+.photo_box{ width:2595px}
+.photo_box img{cursor:pointer;}
+.jt_left{ position:absolute; top:50%; left:80px; margin-top:-48px; cursor:pointer}
+.jt_left:hover{ opacity:0.6}
+.jt_right{ position:absolute; top:50%;right:80px; margin-top:-48px; cursor:pointer}
+.jt_right:hover{ opacity:0.6}
+/*banner*/
+.xiazai{ width:764px; margin:0 auto; margin-bottom:20px;}
+.xiazai p{ font-family:'微软雅黑'; font-size:30px;}
+.xz_left{width:380px; float:left; height:120px;border:1px solid #a8a7a7;padding:40px 0 40px 0; margin-bottom:20px;}
+.xz_left .az{ font-size:32px;}
+.xz_left .yq{ margin-left:16px;}
+.xz_left .jrxz{ width:185px; height:53px; display:block; line-height:53px; background-color:#64cd14; text-align:center; font-size:26px; font-family:'华文细黑'; color:#fff; cursor:pointer;}
+.xz_left .jrxz:hover{background-color:#1462cd;}
+.xz_left img{ margin-left:50px}
+.xz_left p{ float:right; font-size:14px; margin-top:-12px; margin-right:50px;}
+
+.xz_right{width:380px; float:right; height:120px;border:1px solid #a8a7a7;padding:40px 0 40px 0;margin-bottom:20px;}
+.xz_right .az{ font-size:32px;}
+.xz_right .yq{ margin-left:16px;}
+.xz_right .jrxz{ width:185px; height:53px; display:block; line-height:53px; background-color:#64cd14; text-align:center; font-size:26px; font-family:'华文细黑'; color:#fff; cursor:pointer; }
+.jrxz a{background-image:url(../images/jiantou.png); padding-left:24px; background-repeat:no-repeat; background-position:center left;}
+.xz_right .jrxz:hover{background-color:#1462cd;}
+.xz_right img{ margin-left:50px}
+.xz_right p{float:right; font-size:14px; margin-top:-12px; margin-right:50px;}
+
+.a1{ margin-left:188px;}
+.prev{ padding:4px;}
+.next{padding:4px;}
+.prev:hover{ box-shadow:0 0 10px rgba(181,181,181,1.00)}
+.next:hover{ box-shadow:0 0 10px rgba(181,181,181,1.00)}
+.f1{ margin-bottom:20px}

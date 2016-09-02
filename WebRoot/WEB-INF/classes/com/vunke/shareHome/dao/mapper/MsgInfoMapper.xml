@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vunke.shareHome.dao.MsgInfoMapper">
+    <sql id="sendMsg_list">msg_id ,user_id  , mobile_num  ,create_time ,random_num ,if_alive,update_time </sql>
+    <resultMap type="com.vunke.shareHome.model.MsgInfo" id="BaseResultMap">
+        <id column="msg_id" property="msg_id" jdbcType="VARCHAR"/>
+        <id column="user_id" property="user_id" jdbcType="VARCHAR"/>
+        <id column="mobile_num" property="mobile_num" jdbcType="VARCHAR"/>
+        <id column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
+        <id column="random_num" property="random_num" jdbcType="VARCHAR"/>
+        <id column="if_alive" property="if_alive" jdbcType="VARCHAR"/>
+        <id column="update_time" property="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.vunke.shareHome.model.MsgInfo">
+        insert into SEND_MSG (
+        MSG_ID,user_id,mobile_num,create_time,random_num,if_alive,update_time)
+        values(#{msg_id,jdbcType=VARCHAR},#{user_id,jdbcType=VARCHAR},#{mobile_num,jdbcType=VARCHAR}
+        ,to_date(#{create_time,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+        #{random_num,jdbcType=VARCHAR},#{if_alive,jdbcType=VARCHAR},
+        to_date(#{update_time,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss')
+        )
+
+    </insert>
+
+    <select id="selectSequence" resultType="java.lang.String">
+
+			select to_char(SEQ_MSG_ID.nextval,'FM0000') from dual
+
+		</select>
+    <!-- 		<select id="selectByPhone"   resultType="com.vunke.shareHome.model.MsgInfo">
+     -->
+    <select id="selectByPhone" resultMap="BaseResultMap" parameterType="com.vunke.shareHome.model.MsgInfo">
+				select   msg_id ,user_id  , mobile_num  ,
+				to_char(create_time,'yyyy-mm-dd hh24:mi:ss')  as create_time,
+				random_num ,if_alive,
+				to_char(update_time,'yyyy-mm-dd hh24:mi:ss') as update_time
+				from send_msg  where  mobile_num = #{mobile_num,jdbcType=VARCHAR}  
+				and  if_alive = #{if_alive,jdbcType=VARCHAR}  		
+ 		</select>
+    <select id="selectRandom" resultMap="BaseResultMap" parameterType="java.lang.String">
+
+
+select * from send_msg 	where create_time =(select max(create_time)  from send_msg where
+             mobile_num = #{mobile_num,jdbcType=VARCHAR})
+
+ 		</select>
+    <!--  		<select id="selectRandom"  resultMap="BaseResultMap"  parameterType="com.vunke.shareHome.model.MsgInfo"  >
+                    select   s.*   from (select mobile_num,max(create_time) as create_time from send_msg
+                    group by mobile_num having mobile_num=#{mobile_num,jdbcType=VARCHAR}  ) t , send_msg s
+                    where  t.mobile_num=s.mobile_num  and t.create_time = s.create_time
+             </select> -->
+
+    <!--   <select id="selectRandom" resultMap="com.vunke.shareHome.model.MsgInfo" parameterType="java.lang.String">
+           select * from send_msg
+           where  mobile_num=#{mobile_num,jdbcType=VARCHAR}
+       </select>-->
+
+    <delete id="deleteByMoblie" parameterType="java.lang.String">
+        DELETE FROM SEND_MSG WHERE MOBILE_NUM = #{moblie}
+    </delete>
+</mapper>

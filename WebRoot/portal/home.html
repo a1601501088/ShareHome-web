@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>想家下载</title>
+    <script src="images/jquery.js"></script>
+    <link href="css/home.css" rel="stylesheet" type="text/css">
+    <link href="css/global.css" rel="stylesheet" type="text/css">
+    <script src="js/slides.min.jquery.js"></script>
+</head>
+
+<body>
+<div class="yeyou">
+    <div class="yt_left">
+        <img src="images/LOGO.png">
+    </div>
+    <div class="yt_right">
+        <p>
+            类型：通讯&nbsp;&nbsp;更新：2016-08-25<br>
+            版本号：V1.2.1<br>
+            文件大小：11.7MB<br>
+        </p>
+    </div>
+    <div class="clear_box"></div>
+</div><!--页头-->
+<hr class="f1"><!--分割线-->
+<div class="xiazai">
+    <div class="xz_left" id="xz_left">
+        <img src="images/pingguotubiao.png">
+        <p>
+            <span class="az">苹果手机</span><br>
+            系统要求：<br>
+            <span class="yq">IOS 8.0及以上<br></span>
+      <span class="jrxz"><a
+              href=http://mp.weixinbridge.com/mp/wapredirect?url=https%3A%2F%2Fitunes.apple.com%2Fapp%2Fid1130930231
+      >进入下载</a></span>
+        </p>
+    </div>
+
+    <div class="xz_right" id="xz_right">
+        <img src="images/anzhuotubiao.png">
+        <p>
+            <span class="az">安卓手机</span><br>
+            系统要求：<br>
+            <span class="yq">Android 4.0及以上<br></span>
+            <span class="jrxz"><a
+                    href=http://124.232.135.221:8080/shareHomePhon/ShareHome_AND_V1.2.1-20160825.apk>进入下载</a></span>
+        </p>
+    </div>
+</div>
+
+<hr><!--分割线-->
+<div class="jieshao">
+
+    <b>软件介绍：</b><br>
+    <span class="sp_1">"想家"，让你和家人随时随地视频通话。</span><br>
+    <span class="sp_2">想家是基于“光纤网、IPTV网、手机网”三网合一战略设计的一款互联网可视通话产品，能够实现电视与电视、电视与手机、手机与手机之间的可视通话。无论你是远离家乡的建设者，还是早出晚归的奔奔族，或是公务繁忙的白领，又或者是外出求学的青年，你都可以借助想家"随时随地与老人、孩子、爱人朋友实现"面对面"的沟通。这样的场景以前只出现在电视里，现在因为“想家”的问世已经成为现实。</span><span
+        class="sp_2"><br></span>
+</div><!--介绍-->
+<div id="container">
+    <div id="example">
+
+        <div id="slides">
+            <div class="slides_container">
+                <div>
+                    <a href="#"><img src="images/zhaopian1.png" width="519" height="765" alt="Slide 1"></a>
+
+                </div>
+                <div>
+                    <a href="#"><img src="images/tupian2.png" width="570" height="765" alt="Slide 2"></a>
+
+                </div>
+                <div>
+                    <a href="#"><img src="images/tupian3.png" width="570" height="765" alt="Slide 3"></a>
+
+                </div>
+
+
+            </div>
+            <a href="#" class="prev"><img src="images/zuojian1.png" width="24" height="43" alt="Arrow Prev"></a>
+            <a href="#" class="next"><img src="images/youjian2.png" width="24" height="43" alt="Arrow Next"></a>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+
+        var type = getUrlParam("type");
+        //如果type=ios则隐藏android下载,否则显示
+        if (type=='ios'){
+            $("#xz_right").css("display","none");
+            $("#xz_left").css("marginLeft","200px");
+        }else {
+            $("#xz_right").css("display","display");
+        }
+
+
+        $('#slides').slides({
+            preload: true,
+            preloadImage: 'img/loading.gif',
+            play: 3000,
+            pause: 2000,
+            hoverPause: true,
+            animationComplete: function (current) {
+                $('.caption').animate({
+                    bottom: 0
+                }, 200);
+                if (window.console && console.log) {
+                    // example return of current slide number
+                    console.log(current);
+                }
+                ;
+            }
+        });
+
+
+    });
+
+
+    //方法一：
+    //获取url中的参数
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+</script>
+<!--banner-->
+
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans   
+          http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   
+          http://www.springframework.org/schema/tx   
+          http://www.springframework.org/schema/tx/spring-tx-3.1.xsd  
+          http://www.springframework.org/schema/context   
+          http://www.springframework.org/schema/context/spring-context-3.1.xsd   
+          http://www.springframework.org/schema/aop   
+          http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
+       default-autowire="byName">
+
+    <!-- 使用annotation 自动注册bean
+    <context:component-scan base-package="com.xmp.sys,com.xmp.app,com.core" >
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    -->
+    <!-- 使用annotation 自动注册bean -->
+    <context:component-scan base-package="com"/>
+<!--192.168.198.21   测试: 127.0.0.11 -->
+
+        <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+            <property name="driverClass" value="oracle.jdbc.driver.OracleDriver"/>
+            <property name="jdbcUrl" value="jdbc:oracle:thin:@//127.0.0.11:1521/xjywptdb"/>
+            <property name="user" value="xjpt"/>
+            <property name="password" value="shareHome"/>
+            <property name="autoCommitOnClose" value="true"/>
+            <property name="checkoutTimeout" value="5000"/>
+            <property name="initialPoolSize" value="20"/>
+            <property name="minPoolSize" value="20"/>
+            <property name="maxPoolSize" value="300"/>
+            <property name="maxIdleTime" value="7200"/>
+            <property name="acquireIncrement" value="1800"/>
+            <property name="maxIdleTimeExcessConnections" value="10"/>
+        </bean>
+
+    <!-- 数据源
+                <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+                    <property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
+                    <property name="jdbcUrl" value="jdbc:oracle:thin:@//192.168.28.222:1521/ORCL" />
+                    <property name="user" value="scott" />
+                    <property name="password" value="tiger" />
+                    <property name="autoCommitOnClose" value="true"/>
+                    <property name="checkoutTimeout" value="5000"/>
+                    <property name="initialPoolSize" value="20"/>
+                    <property name="minPoolSize" value="20"/>
+                    <property name="maxPoolSize" value="300"/>
+                    <property name="maxIdleTime" value="7200"/>
+                    <property name="acquireIncrement" value="1800"/>
+                    <property name="maxIdleTimeExcessConnections" value="10"/>
+                </bean>
+-->
+       <!-- 配置SqlSessionFactoryBean -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="/WEB-INF/config/mybatisConfig.xml"/>
+        <property name="typeAliasesPackage" value="com.vunke.*.model,com.vunke.*.log.model,com.basicframe.sys.model"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:com/vunke/*/dao/mapper/*Mapper.xml</value>
+                <value>classpath:com/vunke/*/log/dao/mapper/*Mapper.xml</value>
+                <value>classpath:com/basicframe/sys/dao/sql/*Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 自动装配模式，扫描basePackage目录下，所有的mapper -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.vunke.*.dao,com.vunke.*.log.dao,com.basicframe.sys.dao"/>
+
+    </bean>
+
+    <!-- 定义事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 配置事务特性 -->
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="query*">PROPAGATION_SUPPORTS,readOnly</prop>
+                <prop key="select*">PROPAGATION_SUPPORTS,readOnly</prop>
+                <prop key="find*">PROPAGATION_SUPPORTS,readOnly</prop>
+                <prop key="create*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="insert*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="modify*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="remove*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="delete*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="createLog">PROPAGATION_REQUIRES_NEW,-Exception</prop>
+                <prop key="*">PROPAGATION_SUPPORTS,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 采用自动BeanNameAutoProxyCreator实现代理的自动配置 -->
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="interceptorNames">
+            <list>
+                <value>transactionInterceptor</value>
+            </list>
+        </property>
+        <property name="beanNames">
+            <value>*Serv</value>
+        </property>
+    </bean>
+
+    <!-- 文件上传要用到滴 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="30000000"/>
+    </bean>
+
+</beans>

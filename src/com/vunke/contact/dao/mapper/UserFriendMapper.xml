@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vunke.contact.dao.UserFriendMapper">
+    <resultMap id="BaseResultMap" type="com.vunke.contact.model.UserFriend">
+        <result column="FRIEND_ID" property="friendId" jdbcType="VARCHAR"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="FRIEND_NAME" property="friendName" jdbcType="VARCHAR"/>
+        <result column="FRIEND_ACCOUNT" property="friendAccount" jdbcType="VARCHAR"/>
+        <result column="FRIEND_HEAD" property="friendHead" jdbcType="VARCHAR"/>
+        <result column="OBTAIN_TIME" property="obtainTime" jdbcType="TIMESTAMP"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="java.util.List">
+        <selectKey keyProperty="item.friendId" order="BEFORE"
+                   resultType="java.lang.String">
+            select to_char(sysdate,'yyyyMMddhh24miss')||to_char(SEQ_FRIEND_ID.nextval,'fm0000') from dual
+        </selectKey>
+        insert into USER_FRIEND (FRIEND_ID, USER_NAME, FRIEND_NAME,
+        FRIEND_ACCOUNT, FRIEND_HEAD, OBTAIN_TIME,
+        STATUS, REMARK)
+        values (#{friendId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{friendName,jdbcType=VARCHAR},
+        #{friendAccount,jdbcType=VARCHAR}, #{friendHead,jdbcType=VARCHAR}, #{obtainTime,jdbcType=TIMESTAMP},
+        #{status,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            ( #{item.friendId}, #{item.userName}, #{item.friendName},
+            #{item.friendAccount}, #{item.friendHead},
+            #{item.obtainTime}, #{item.status},
+            #{item.remark})
+        </foreach>
+    </insert>
+    <insert id="insertSelective" parameterType="com.vunke.contact.model.UserFriend">
+        insert into USER_FRIEND
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="friendId != null">
+                FRIEND_ID,
+            </if>
+            <if test="userName != null">
+                USER_NAME,
+            </if>
+            <if test="friendName != null">
+                FRIEND_NAME,
+            </if>
+            <if test="friendAccount != null">
+                FRIEND_ACCOUNT,
+            </if>
+            <if test="friendHead != null">
+                FRIEND_HEAD,
+            </if>
+            <if test="obtainTime != null">
+                OBTAIN_TIME,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="friendId != null">
+                #{friendId,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="friendName != null">
+                #{friendName,jdbcType=VARCHAR},
+            </if>
+            <if test="friendAccount != null">
+                #{friendAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="friendHead != null">
+                #{friendHead,jdbcType=VARCHAR},
+            </if>
+            <if test="obtainTime != null">
+                #{obtainTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        <selectKey keyProperty="friendId" order="BEFORE"
+                   resultType="java.lang.String">
+            select to_char(sysdate,'yyMMddhh24miss')||to_char(SEQ_FRIEND_ID.nextval,'fm0000') from dual
+        </selectKey>
+    </insert>
+
+    <!--SELECT  * FROM USER_INFO WHERE user_dn not in ('11831726818390878104','11831726913367471188') and   USER_MOBILE in('13278875981','18007341520','15367478408')
+-->
+    <select id="queryFriend" parameterType="java.util.Map" resultType="com.vunke.shareHome.model.UserInfo">
+        SELECT  DISTINCT USER_MOBILE,CASE length(user_dn) WHEN 20 THEN substr(user_dn,10)  ELSE user_dn END as user_dn  FROM (SELECT * FROM USER_INFO
+        <if test="clientContacts!=null and clientContacts!=''">
+            WHERE
+            <foreach collection="clientContacts" item="clientContact" index="index" open="" separator="or" close="">
+                USER_MOBILE = #{clientContact.phone}
+            </foreach>
+        </if>
+        )
+        <if test="shareContacts!=null and shareContacts.size()!=0">
+            WHERE
+            <foreach collection="shareContacts" item="shareContact" index="index" open="" separator="and" close="">
+            user_dn  NOT LIKE '%'||#{shareContact.account}||'%'
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryFriendByDB" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT  a.*,ROWNUM rn FROM USER_FRIEND a WHERE FRIEND_ACCOUNT = #{friendAccount} AND USER_NAME = #{userName} and ROWNUM = '1'
+    </select>
+
+    <select id="queryFriendRe" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT * FROM USER_FRIEND WHERE USER_NAME = #{userName} and
+        <foreach collection="friendAccounts" item="friendAccount" index="index" open="" separator="or" close="">
+            FRIEND_ACCOUNT !=#{friendAccount.userName}
+        </foreach>
+    </select>
+    <!--筛选手机联系人中的想家联系人-->
+    <select id="queryShareHomeContact" parameterType="java.util.List" resultType="com.vunke.shareHome.model.UserInfo">
+        SELECT USER_MOBILE,USER_TYPE FROM USER_INFO WHERE
+        <foreach collection="list" item="item" open="" separator="or" close="">
+            USER_MOBILE = #{item.phone,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <update id="updateFriendById" parameterType="com.vunke.contact.model.UserFriend">
+        UPDATE USER_FRIEND
+        <set>
+            <if test="userName!=null and userName!=''">
+                USER_NAME = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="friendName!=null and friendName!=''">
+                FRIEND_NAME = #{friendName,jdbcType=VARCHAR},
+            </if>
+            <if test="friendAccount!=null and friendAccount!=''">
+                FRIEND_ACCOUNT = #{friendAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="friendHead!=null and friendHead!=''">
+                FRIEND_HEAD = #{friendHead,jdbcType=VARCHAR},
+            </if>
+            <if test="obtainTime!=null and obtainTime!=''">
+                OBTAIN_TIME = #{obtainTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="status!=null and status!=''">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="remark!=null and remark!=''">
+                REMARK = #{remark,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE FRIEND_ID = #{friendId,jdbcType=VARCHAR}
+    </update>
+
+
+</mapper>

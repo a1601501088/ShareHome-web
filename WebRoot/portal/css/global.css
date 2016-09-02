@@ -1,0 +1,62 @@
+/*
+	Resets defualt browser settings
+	reset.css
+*/
+
+
+#container {
+	width:519px;
+	padding:10px;
+	margin:0 auto;
+	position:relative;
+	z-index:0;
+	margin-bottom:20px;
+}
+
+#example {
+	widows:519px;
+	height:765px;
+	position:relative;
+}
+#example ul{ display:none}
+#slides {
+	position:absolute;
+	top:15px;
+	left:4px;
+	z-index:100;
+}
+
+#slides .next,#slides .prev {
+	position:absolute;
+	top:50%;
+	margin-top:-47.5px;
+	left:-110px;
+	display:block;
+}
+
+.slides_container {
+	width:519px;
+	height:765px;
+	overflow:hidden;
+	position:relative;
+}
+
+#slides .next {
+	left:585px;
+}
+
+
+.caption {
+	position:absolute;
+	bottom:-35px;
+	height:30px;
+	padding:5px 20px 0 20px;
+	background:#000;
+	background:rgba(0,0,0,.5);
+	width:540px;
+	font-size:1.3em;
+	line-height:1.33;
+	color:#fff;
+	border-top:1px solid #000;
+	text-shadow:none;
+}

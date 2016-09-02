@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vunke.shareHome.dao.MissedCallMapper" >
+  <resultMap id="BaseResultMap" type="com.vunke.shareHome.model.MissedCall" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CALLING_PHONE" property="callingPhone" jdbcType="VARCHAR" />
+    <result column="CALLING_NAME" property="callingName" jdbcType="VARCHAR" />
+    <result column="CALLED_PHONE" property="calledPhone" jdbcType="VARCHAR" />
+    <result column="CALLED_NAME" property="calledName" jdbcType="VARCHAR" />
+    <result column="CALL_TIME" property="callTime" jdbcType="VARCHAR" />
+    <result column="CALLING_IP" property="callingIp" jdbcType="VARCHAR" />
+    <result column="CALLING_TYPE" property="callingType" jdbcType="VARCHAR" />
+    <result column="CALLED_TYPE" property="calledType" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="OTHER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CALLING_PHONE, CALLING_NAME, CALLED_PHONE, CALLED_NAME, CALL_TIME, CALLING_IP, 
+    CALLING_TYPE, CALLED_TYPE, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from MISSED_CALL
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from MISSED_CALL
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.vunke.shareHome.model.MissedCall" >
+    insert into MISSED_CALL (ID, CALLING_PHONE, CALLING_NAME, 
+      CALLED_PHONE, CALLED_NAME, CALL_TIME, 
+      CALLING_IP, CALLING_TYPE, CALLED_TYPE, 
+      CREATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{callingPhone,jdbcType=VARCHAR}, #{callingName,jdbcType=VARCHAR}, 
+      #{calledPhone,jdbcType=VARCHAR}, #{calledName,jdbcType=VARCHAR}, #{callTime,jdbcType=VARCHAR}, 
+      #{callingIp,jdbcType=VARCHAR}, #{callingType,jdbcType=VARCHAR}, #{calledType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=OTHER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vunke.shareHome.model.MissedCall" >
+    insert into MISSED_CALL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="callingPhone != null" >
+        CALLING_PHONE,
+      </if>
+      <if test="callingName != null" >
+        CALLING_NAME,
+      </if>
+      <if test="calledPhone != null" >
+        CALLED_PHONE,
+      </if>
+      <if test="calledName != null" >
+        CALLED_NAME,
+      </if>
+      <if test="callTime != null" >
+        CALL_TIME,
+      </if>
+      <if test="callingIp != null" >
+        CALLING_IP,
+      </if>
+      <if test="callingType != null" >
+        CALLING_TYPE,
+      </if>
+      <if test="calledType != null" >
+        CALLED_TYPE,
+      </if>
+      CREATE_TIME,
+
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="callingPhone != null" >
+        #{callingPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="callingName != null" >
+        #{callingName,jdbcType=VARCHAR},
+      </if>
+      <if test="calledPhone != null" >
+        #{calledPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="calledName != null" >
+        #{calledName,jdbcType=VARCHAR},
+      </if>
+      <if test="callTime != null" >
+        #{callTime,jdbcType=VARCHAR},
+      </if>
+      <if test="callingIp != null" >
+        #{callingIp,jdbcType=VARCHAR},
+      </if>
+      <if test="callingType != null" >
+        #{callingType,jdbcType=VARCHAR},
+      </if>
+      <if test="calledType != null" >
+        #{calledType,jdbcType=VARCHAR},
+      </if>
+      SYSDATE,
+
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vunke.shareHome.model.MissedCall" >
+    update MISSED_CALL
+    <set >
+      <if test="callingPhone != null" >
+        CALLING_PHONE = #{callingPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="callingName != null" >
+        CALLING_NAME = #{callingName,jdbcType=VARCHAR},
+      </if>
+      <if test="calledPhone != null" >
+        CALLED_PHONE = #{calledPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="calledName != null" >
+        CALLED_NAME = #{calledName,jdbcType=VARCHAR},
+      </if>
+      <if test="callTime != null" >
+        CALL_TIME = #{callTime,jdbcType=VARCHAR},
+      </if>
+      <if test="callingIp != null" >
+        CALLING_IP = #{callingIp,jdbcType=VARCHAR},
+      </if>
+      <if test="callingType != null" >
+        CALLING_TYPE = #{callingType,jdbcType=VARCHAR},
+      </if>
+      <if test="calledType != null" >
+        CALLED_TYPE = #{calledType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=OTHER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vunke.shareHome.model.MissedCall" >
+    update MISSED_CALL
+    set CALLING_PHONE = #{callingPhone,jdbcType=VARCHAR},
+      CALLING_NAME = #{callingName,jdbcType=VARCHAR},
+      CALLED_PHONE = #{calledPhone,jdbcType=VARCHAR},
+      CALLED_NAME = #{calledName,jdbcType=VARCHAR},
+      CALL_TIME = #{callTime,jdbcType=VARCHAR},
+      CALLING_IP = #{callingIp,jdbcType=VARCHAR},
+      CALLING_TYPE = #{callingType,jdbcType=VARCHAR},
+      CALLED_TYPE = #{calledType,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=OTHER}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

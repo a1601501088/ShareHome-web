@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vunke.shareHome.dao.UserInfoMapper">
+
+    <insert id="insert" parameterType="com.vunke.shareHome.model.UserInfo">
+        insert into USER_INFO (USER_ID, USER_DN, USER_PASS,
+        STATUS, USER_TYPE, USER_MOBILE,
+        CREATE_TIME, USER_IP,REQUEST_CODE,OUT_TIME)
+        values (#{userId,jdbcType=VARCHAR}, #{userDn,jdbcType=VARCHAR}, #{userPass,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, #{userMobile,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR},
+        #{requestCode,jdbcType=VARCHAR},#{outTime,jdbcType=TIMESTAMP})
+        <selectKey keyProperty="userId" order="BEFORE" resultType="String">
+            select '19'|| to_char(sysdate,'hh24miss')||to_char(seq_user_info.nextval,'fm000') from dual
+        </selectKey>
+    </insert>
+
+    <update id="updatePass" parameterType="com.vunke.shareHome.model.UserInfo">
+        update USER_INFO
+        <set>
+            USER_PASS = #{userPass,jdbcType=VARCHAR}
+        </set>
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryUserInfo" resultType="com.vunke.shareHome.model.UserInfo" parameterType="String">
+      SELECT * FROM  USER_INFO WHERE  USER_DN = #{userDn,jdbcType=VARCHAR}
+    </select>
+    <select id="findUserInfoByUserMoblie" resultType="com.vunke.shareHome.model.UserInfo" parameterType="String">
+        SELECT * FROM USER_INFO WHERE USER_MOBILE = #{userMobile,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateUserInfo" parameterType="com.vunke.shareHome.model.UserInfo">
+        update USER_INFO
+        <set>
+            <if test="userPass!=null and userDn!=''">
+                USER_PASS = #{userPass,jdbcType=VARCHAR}
+            </if>
+            <if test="status!=null and status!=''">
+                STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="userType!=null and userType!=''">
+                USER_TYPE = #{userType,jdbcType=VARCHAR}
+            </if>
+            <if test="userMobile!=null and userMobile!=''">
+                USER_MOBILE = #{userMobile,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="userIp!=null and userIp!=''">
+                USER_IP = #{userIp,jdbcType=VARCHAR}
+            </if>
+            <if test="requestCode!=null and requestCode!=''">
+                REQUEST_CODE = #{requestCode,jdbcType=VARCHAR}
+            </if>
+            <if test="outTime!=null and outTime!=''">
+                OUT_TIME = #{outTime,jdbcType=TIMESTAMP}
+            </if>
+
+        </set>
+        where USER_DN = #{userDn,jdbcType=VARCHAR}
+    </update>
+
+</mapper>
